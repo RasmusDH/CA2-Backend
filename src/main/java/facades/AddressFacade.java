@@ -1,5 +1,8 @@
 package facades;
 
+import DTO.AddressDTO;
+import entities.Address;
+import exceptions.AlreadyExistsException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -45,6 +48,23 @@ public class AddressFacade {
             em.close();
         }
         
+    }
+    
+    public AddressDTO createAddress(AddressDTO address) throws AlreadyExistsException {
+        EntityManager em = emf.createEntityManager();
+        Address entaddress = new Address();
+        entaddress.setStreet(address.getStreet());
+        entaddress.setAdditionalInfo(address.getAdditionalInfo());
+        try {
+            em.getTransaction().begin();
+            em.persist(entaddress);
+            em.getTransaction().commit();
+            return address;
+        } catch (Exception ex) {
+            throw new AlreadyExistsException("This address exists in the database.");
+        } finally {
+            em.close();
+        }
     }
 
 }

@@ -1,25 +1,65 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 
 @Entity
-@NamedQuery(name = "RenameMe.deleteAllRows", query = "DELETE from RenameMe")
+@NamedQuery(name = "Address.deleteAllRows", query = "DELETE from Address")
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+    @Column(unique=true)
+    private String street;
+    private String additionalInfo;
+    @OneToMany(mappedBy = "address" ,
+            cascade = CascadeType.PERSIST)
+    private List<Person> persons = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private CityInfo cityInfo;
+
     public Address() {
     }
-        
+
+    public Address(String street, String additionalInfo) {
+        this.street = street;
+        this.additionalInfo = additionalInfo;
+    }
+
+    public List<Person> getPersons() {
+        return persons;
+    }
+
+    public CityInfo getCityInfo() {
+        return cityInfo;
+    }
+
+    public void setCityInfo(CityInfo cityInfo) {
+        this.cityInfo = cityInfo;
+    }
+    
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
+    
+    public void addPerson(Person person) {
+        this.persons.add(person);
+    }
+
     public Long getId() {
         return id;
     }
@@ -27,35 +67,21 @@ public class Address implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    // TODO, delete this class, or rename to an Entity class that makes sense for what you are about to do
-    // Delete EVERYTHING below if you decide to use this class, it's dummy data used for the initial demo
-    private String dummyStr1;
-    private String dummyStr2;
 
-    public Address(String dummyStr1, String dummyStr2) {
-        this.dummyStr1 = dummyStr1;
-        this.dummyStr2 = dummyStr2;
+    public String getStreet() {
+        return street;
     }
 
-    public String getDummyStr1() {
-        return dummyStr1;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public void setDummyStr1(String dummyStr1) {
-        this.dummyStr1 = dummyStr1;
+    public String getAdditionalInfo() {
+        return additionalInfo;
     }
 
-    public String getDummyStr2() {
-        return dummyStr2;
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
     }
-
-    public void setDummyStr2(String dummyStr2) {
-        this.dummyStr2 = dummyStr2;
-    }
-    
-    
-    
-
    
 }
