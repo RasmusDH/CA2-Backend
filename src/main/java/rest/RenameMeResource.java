@@ -1,5 +1,5 @@
 package rest;
-
+/*
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import utils.EMF_Creator;
@@ -32,4 +32,4 @@ public class RenameMeResource {
         //System.out.println("--------------->"+count);
         return "{\"count\":"+count+"}";  //Done manually so no need for a DTO
     }
-}
+}*/
