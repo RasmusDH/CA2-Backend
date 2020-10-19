@@ -69,13 +69,6 @@ public class PersonFacade implements IPersonFacade{
         }   
     }
     
-/*
-    @Override
-    public PersonsDTO getPersonZip(int zip) {
-        
-    }
-*/
-    
     @Override
     public int getPersoncountByHobby(Hobby hobby) {
         EntityManager em = emf.createEntityManager();
@@ -133,27 +126,12 @@ public class PersonFacade implements IPersonFacade{
         }
     }
 
-    @Override
-    public PersonsDTO getPersonsByAddress(AddressDTO addressdto) {
-        EntityManager em = getEntityManager();
-        
-        long addressID = addressdto.getID();
-        try{
-            Query q = em.createQuery(
-                "SELECT p FROM Person p" +
-                "left join Address a" +
-                "on p.aId = a.id where a.id= :id");
-                q.setParameter("id", addressID);
-                
-            return new PersonsDTO(q.getResultList());
-        } finally{  
-            em.close();
-        }
-    }
     
     
     
-
+    
+    
+    
     @Override
     public PersonDTO addPerson(PersonDTO pDTO, List<Phone> phones, String street, String additionalInfo) {
         EntityManager em = getEntityManager();
@@ -241,6 +219,8 @@ public class PersonFacade implements IPersonFacade{
     public HobbyDTO editHobby(HobbyDTO hDTO) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
 
     
 

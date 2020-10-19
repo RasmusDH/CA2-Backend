@@ -21,10 +21,6 @@ public interface IPersonFacade {
   public int getPersoncountByHobby(Hobby hobby); 
   public PersonDTO getPersonByNumber(int number);
   public PersonsDTO getAllPersons(Hobby hobby); 
-  public PersonsDTO getPersonsByAddress(AddressDTO addressdto);
-  
-  // Skal den være i addresse facaden?
-  //public PersonsDTO getPersonsZip(int zip); 
   
   
   public PersonDTO addPerson(PersonDTO pDTO, List<Phone> phone, String street, String additionalInfo);
