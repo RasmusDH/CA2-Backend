@@ -1,25 +1,39 @@
 package entities;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
 
 @Entity
-@NamedQuery(name = "RenameMe.deleteAllRows", query = "DELETE from RenameMe")
+@NamedQuery(name = "Phone.deleteAllRows", query = "DELETE from Phone")
 public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     private Long id;
+    private int number;
+    private String description;
+    
+    @ManyToOne(cascade = { CascadeType.PERSIST })
+    private Person person;
     
     public Phone() {
     }
+
+    public Phone(int number, String description) {
+        this.number = number;
+        this.description = description;
+    }
         
+    
     public Long getId() {
         return id;
     }
@@ -27,35 +41,34 @@ public class Phone implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    // TODO, delete this class, or rename to an Entity class that makes sense for what you are about to do
-    // Delete EVERYTHING below if you decide to use this class, it's dummy data used for the initial demo
-    private String dummyStr1;
-    private String dummyStr2;
 
-    public Phone(String dummyStr1, String dummyStr2) {
-        this.dummyStr1 = dummyStr1;
-        this.dummyStr2 = dummyStr2;
+    public int getNumber() {
+        return number;
     }
 
-    public String getDummyStr1() {
-        return dummyStr1;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
-    public void setDummyStr1(String dummyStr1) {
-        this.dummyStr1 = dummyStr1;
+    public String getDescription() {
+        return description;
     }
 
-    public String getDummyStr2() {
-        return dummyStr2;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setDummyStr2(String dummyStr2) {
-        this.dummyStr2 = dummyStr2;
+    public Person getPerson() {
+        return person;
     }
-    
-    
-    
 
-   
+    public void setPerson(Person person) {
+        if (person != null){
+            this.person = person;
+            person.setNumbers(this);
+        } else {
+            this.person = null;
+        }
+    }
+
 }

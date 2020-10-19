@@ -51,10 +51,5 @@ public class PersonFacadeTest {
 //        Remove any data after each test was run
     }
 
-    // TODO: Delete or change this method 
-    @Test
-    public void testAFacadeMethod() {
-        assertEquals(2, facade.getRenameMeCount(), "Expects two rows in the database");
-    }
 
 }
