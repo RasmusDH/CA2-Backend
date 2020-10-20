@@ -32,6 +32,12 @@ public class CityInfo implements Serializable {
     
     public CityInfo() {
     }
+
+    public CityInfo(String zipCode, String city) {
+        this.zipCode = zipCode;
+        this.city = city;
+    }
+    
         
 //    public Long getId() {
 //        return id;
@@ -43,6 +49,18 @@ public class CityInfo implements Serializable {
 
     public String getCity() {
         return city;
+    }
+    
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+    
+    public void addAddress(Address address){
+        this.addresses.add(address);
     }
     
 }
