@@ -107,13 +107,9 @@ public class PersonFacade implements IPersonFacade{
             return personIDList;
         }
     
-    
-    // Antallet af det samme hobby ID, så ved hobby med id 6 er der 2
     @Override
     public int getPersoncountByHobby(Hobby hobby) {
-        // Get all persons with a given hobby
         EntityManager em = emf.createEntityManager();
-        
         try{
             return getAllPersons(hobby).getAll().size();
         }finally{  
