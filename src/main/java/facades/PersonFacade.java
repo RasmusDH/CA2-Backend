@@ -71,10 +71,15 @@ public class PersonFacade implements IPersonFacade{
     
     @Override
     public int getPersoncountByHobby(Hobby hobby) {
+        // Get all persons with a given hobby
         EntityManager em = emf.createEntityManager();
         
         long hobbyID = hobby.getId();
         try{
+            Query q =  em.createNamedQuery("Person.PersoncountByHobby");
+            q.setParameter("id", hobbyID);
+            return (int)q.getSingleResult();
+            /*
             Query q = em.createQuery(
                 "SELECT COUNT(p) FROM Person p" +
                 "left join Hobby h" +
@@ -82,6 +87,7 @@ public class PersonFacade implements IPersonFacade{
                 q.setParameter("id", hobbyID);
                 
                 return (int)q.getSingleResult();
+            */
         }finally{  
             em.close();
         }
@@ -92,6 +98,7 @@ public class PersonFacade implements IPersonFacade{
         EntityManager em = emf.createEntityManager();
         
         try{
+            /*
             Query q1 = em.createQuery("SELECT id FROM Phone p WHERE number= :number");
                 q1.setParameter("number", number);
             long phoneID = (long)q1.getSingleResult();
@@ -101,8 +108,9 @@ public class PersonFacade implements IPersonFacade{
                 + "left join Phone ph"
                 + "on p.phId = ph.id where ph.id= :id");
                 q2.setParameter("id", phoneID);
-                
-            return (PersonDTO)q2.getSingleResult();
+            */    
+            //return (PersonDTO)q2.getSingleResult();
+            return null;
         }finally{  
             em.close();
         }
@@ -114,6 +122,7 @@ public class PersonFacade implements IPersonFacade{
         
         long hobbyID = hobby.getId();
         try{
+            /*
             Query q = em.createQuery(
                 "SELECT p FROM Person p" +
                 "left join Hobby h" +
@@ -121,6 +130,8 @@ public class PersonFacade implements IPersonFacade{
                 q.setParameter("id", hobbyID);
                 
             return new PersonsDTO(q.getResultList());
+            */
+            return null;
         } finally{  
             em.close();
         }
@@ -136,7 +147,7 @@ public class PersonFacade implements IPersonFacade{
     public PersonDTO addPerson(PersonDTO pDTO, List<Phone> phones, String street, String additionalInfo) {
         EntityManager em = getEntityManager();
         
-        Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName(), phones);
+        Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName());
         try {
             em.getTransaction().begin();
             Query q = em.createQuery("SELECT a FROM Address a WHERE a.street= :street AND a.additionalInfo= :additionalInfo");

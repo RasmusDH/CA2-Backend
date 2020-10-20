@@ -18,8 +18,11 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person"),
-    @NamedQuery(name = "Person.getAllRows", query = "SELECT p from Person p")
+    @NamedQuery(name = "Person.getAllRows", query = "SELECT p from Person p"),
     
+    @NamedQuery(name = "Person.PersoncountByHobby", query = 
+            "SELECT COUNT(p) from PERSON_HOBBY ph where hobbies_ID =:id"),
+
 })
 public class Person implements Serializable {
 
@@ -32,20 +35,19 @@ public class Person implements Serializable {
     private String firstName;
     private String lastName;
     
-    @ManyToMany(mappedBy = "person")
+    @ManyToMany(cascade = { CascadeType.PERSIST })
     private List<Hobby> hobbies = new ArrayList();
     
     @ManyToOne(cascade = { CascadeType.PERSIST })
     private Address address;
     
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = { CascadeType.PERSIST })
     private List<Phone> numbers = new ArrayList();
 
-    public Person(String email, String firstName, String lastName, List<Phone> phones) {
+    public Person(String email, String firstName, String lastName) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.numbers = phones;
     }
     
     public Person() {
@@ -87,7 +89,7 @@ public class Person implements Serializable {
         return hobbies;
     }
 
-    public void setHobbies(Hobby hobby) {
+    public void setHobby(Hobby hobby) {
         if (hobby != null){
             hobbies.add(hobby);
         }
@@ -97,7 +99,7 @@ public class Person implements Serializable {
         return numbers;
     }
 
-    public void setNumbers(Phone number) {
+    public void setNumber(Phone number) {
         if (number != null){
             numbers.add(number);
         }

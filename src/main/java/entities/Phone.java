@@ -28,9 +28,10 @@ public class Phone implements Serializable {
     public Phone() {
     }
 
-    public Phone(int number, String description) {
+    public Phone(int number, String description, Person p) {
         this.number = number;
         this.description = description;
+        this.person = p;
     }
         
     
@@ -65,7 +66,7 @@ public class Phone implements Serializable {
     public void setPerson(Person person) {
         if (person != null){
             this.person = person;
-            person.setNumbers(this);
+            person.setNumber(this);
         } else {
             this.person = null;
         }
