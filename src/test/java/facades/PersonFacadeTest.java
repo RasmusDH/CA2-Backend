@@ -33,7 +33,7 @@ public class PersonFacadeTest {
 
     @BeforeAll
     public static void setUpClass() {
-       emf = EMF_Creator.createEntityManagerFactory();
+       emf = EMF_Creator.createEntityManagerFactoryForTest();
        facade = PersonFacade.getFacadeExample(emf);
     }
 
@@ -68,7 +68,9 @@ public class PersonFacadeTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();   
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+                
                 em.persist(p1);
                 em.persist(p2);
             em.getTransaction().commit();
@@ -112,14 +114,45 @@ public class PersonFacadeTest {
     
     
     @Test
+    public void testGetPersonByPhone() {
+        System.out.println("Tester get person by phone");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        PersonDTO expResult = new PersonDTO(p1);
+        PersonDTO result = pFac.getPersonByNumber(22223333);
+        
+        assertEquals(expResult.getEmail(), result.getEmail());
+    }
+    
+    @Test
+    public void testPersonsHobby() {
+        System.out.println("Tester Persons Hobby");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        int expResult = 2;
+        int result = pFac.getAllPersons(h2).getAll().size();
+        
+        assertEquals(expResult, result);
+    }
+
+    
+    @Test
     public void testGetPersoncountHobby() {
         System.out.println("Tester getPersonCount Hobby");
         
         EntityManagerFactory _emf = null;
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
-        Long expResult = 2L;
-        Long result = pFac.getPersoncountByHobby(hobby);
+        int expResult = 2;
+        int result = pFac.getPersoncountByHobby(h2);
         assertEquals(expResult, result);
     }
+
+    
+    
+    
 }

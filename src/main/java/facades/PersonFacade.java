@@ -9,11 +9,13 @@ import entities.Hobby;
 import entities.Person;
 import entities.Address;
 import entities.Phone;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -70,24 +72,50 @@ public class PersonFacade implements IPersonFacade{
     }
     
     @Override
+    public PersonsDTO getAllPersons(Hobby hobby) {
+        EntityManager em = getEntityManager();
+        
+        try{
+            List<Long> personIDList = listOfPersonIDs(hobby, em);
+            List<Person> personList = new ArrayList(); 
+            personListByIDList(personIDList, em, personList);
+            
+            return new PersonsDTO(personList);
+        } finally{  
+            em.close();
+        }
+    }
+
+        private void personListByIDList(List<Long> personIDList, EntityManager em, List<Person> personList) {
+            for(Long id : personIDList){
+                Query q2 = em.createQuery(
+                        "SELECT p FROM Person p where p.id= :id");
+                q2.setParameter("id", id);
+                Person tempP = (Person)q2.getSingleResult();
+                personList.add(tempP);
+            }
+        }
+
+        private List<Long> listOfPersonIDs(Hobby hobby, EntityManager em) {
+            long hobbyID = hobby.getId();
+            Query q = em.createQuery(
+                    "SELECT p.id FROM Person p " +
+                            "JOIN Hobby h " +
+                            "on p.hobbies.id = h.id where h.id= :id");
+            q.setParameter("id", hobbyID);
+            List<Long> personIDList = q.getResultList();
+            return personIDList;
+        }
+    
+    
+    // Antallet af det samme hobby ID, så ved hobby med id 6 er der 2
+    @Override
     public int getPersoncountByHobby(Hobby hobby) {
         // Get all persons with a given hobby
         EntityManager em = emf.createEntityManager();
         
-        long hobbyID = hobby.getId();
         try{
-            Query q =  em.createNamedQuery("Person.PersoncountByHobby");
-            q.setParameter("id", hobbyID);
-            return (int)q.getSingleResult();
-            /*
-            Query q = em.createQuery(
-                "SELECT COUNT(p) FROM Person p" +
-                "left join Hobby h" +
-                "on p.hId = h.id where h.id= :id");
-                q.setParameter("id", hobbyID);
-                
-                return (int)q.getSingleResult();
-            */
+            return getAllPersons(hobby).getAll().size();
         }finally{  
             em.close();
         }
@@ -98,44 +126,20 @@ public class PersonFacade implements IPersonFacade{
         EntityManager em = emf.createEntityManager();
         
         try{
-            /*
-            Query q1 = em.createQuery("SELECT id FROM Phone p WHERE number= :number");
-                q1.setParameter("number", number);
-            long phoneID = (long)q1.getSingleResult();
             
-            Query q2 = em.createQuery(
-                "SELECT p FROM Person p"
-                + "left join Phone ph"
-                + "on p.phId = ph.id where ph.id= :id");
-                q2.setParameter("id", phoneID);
-            */    
-            //return (PersonDTO)q2.getSingleResult();
-            return null;
+            Query q1 = em.createQuery("SELECT ph.person.id FROM Phone ph WHERE ph.number= :number");
+                q1.setParameter("number", number);
+            long personID = (long)q1.getSingleResult();
+            
+            Query q2 = em.createQuery("SELECT p FROM Person p where p.id= :id");
+                q2.setParameter("id", personID);
+            
+            return new PersonDTO((Person)q2.getSingleResult());
         }finally{  
             em.close();
         }
     }
     
-    @Override
-    public PersonsDTO getAllPersons(Hobby hobby) {
-        EntityManager em = getEntityManager();
-        
-        long hobbyID = hobby.getId();
-        try{
-            /*
-            Query q = em.createQuery(
-                "SELECT p FROM Person p" +
-                "left join Hobby h" +
-                "on p.hId = h.id where h.id= :id");
-                q.setParameter("id", hobbyID);
-                
-            return new PersonsDTO(q.getResultList());
-            */
-            return null;
-        } finally{  
-            em.close();
-        }
-    }
 
     
     
