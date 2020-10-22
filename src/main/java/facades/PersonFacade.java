@@ -72,10 +72,14 @@ public class PersonFacade implements IPersonFacade{
     }
     
     @Override
-    public PersonsDTO getAllPersons(Hobby hobby) {
+    public PersonsDTO getAllPersons(String hobbyName) {
         EntityManager em = getEntityManager();
         
         try{
+            Query q = em.createQuery(
+                        "SELECT h FROM Hobby h where h.name= :name");
+                q.setParameter("name", hobbyName);
+                Hobby hobby = (Hobby)q.getSingleResult();
             List<Long> personIDList = listOfPersonIDs(hobby, em);
             List<Person> personList = new ArrayList(); 
             personListByIDList(personIDList, em, personList);
@@ -108,10 +112,10 @@ public class PersonFacade implements IPersonFacade{
         }
     
     @Override
-    public int getPersoncountByHobby(Hobby hobby) {
+    public int getPersoncountByHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
         try{
-            return getAllPersons(hobby).getAll().size();
+            return getAllPersons(hobbyName).getAll().size();
         }finally{  
             em.close();
         }
@@ -122,15 +126,16 @@ public class PersonFacade implements IPersonFacade{
         EntityManager em = emf.createEntityManager();
         
         try{
-            
             Query q1 = em.createQuery("SELECT ph.person.id FROM Phone ph WHERE ph.number= :number");
                 q1.setParameter("number", number);
             long personID = (long)q1.getSingleResult();
             
             Query q2 = em.createQuery("SELECT p FROM Person p where p.id= :id");
                 q2.setParameter("id", personID);
-            
-            return new PersonDTO((Person)q2.getSingleResult());
+                
+                Person p = (Person)q2.getSingleResult();
+                System.out.println("Person from facade: " + p.getFirstName());
+            return new PersonDTO(p);
         }finally{  
             em.close();
         }

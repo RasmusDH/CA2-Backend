@@ -68,8 +68,11 @@ public class PersonFacadeTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+                em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
             em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();   
+                em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+                em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
                 
                 em.persist(p1);
                 em.persist(p2);
@@ -114,7 +117,7 @@ public class PersonFacadeTest {
     
     
     @Test
-    public void testGetPersonByPhone() {
+    public void testGetPersonByNumber() {
         System.out.println("Tester get person by phone");
         
         EntityManagerFactory _emf = null;
@@ -134,7 +137,7 @@ public class PersonFacadeTest {
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
         int expResult = 2;
-        int result = pFac.getAllPersons(h2).getAll().size();
+        int result = pFac.getAllPersons(h2.getName()).getAll().size();
         
         assertEquals(expResult, result);
     }
@@ -148,7 +151,7 @@ public class PersonFacadeTest {
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
         int expResult = 2;
-        int result = pFac.getPersoncountByHobby(h2);
+        int result = pFac.getPersoncountByHobby(h2.getName());
         assertEquals(expResult, result);
     }
 

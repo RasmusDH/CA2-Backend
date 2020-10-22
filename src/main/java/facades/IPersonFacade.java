@@ -18,9 +18,9 @@ import java.util.List;
 public interface IPersonFacade {
   public PersonDTO getPerson(long id); 
   public PersonsDTO getAllPersons();  
-  public int getPersoncountByHobby(Hobby hobby); 
   public PersonDTO getPersonByNumber(int number);
-  public PersonsDTO getAllPersons(Hobby hobby); 
+  public int getPersoncountByHobby(String hobby); 
+  public PersonsDTO getAllPersons(String hobby); 
   
   
   public PersonDTO addPerson(PersonDTO pDTO, List<Phone> phone, String street, String additionalInfo);
