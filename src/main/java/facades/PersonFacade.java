@@ -9,6 +9,7 @@ import entities.Hobby;
 import entities.Person;
 import entities.Address;
 import entities.Phone;
+import exceptions.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -144,7 +145,7 @@ public class PersonFacade implements IPersonFacade{
     
     
     @Override
-    public PersonDTO addPerson(PersonDTO pDTO, List<Phone> phones, String street, String additionalInfo) {
+    public PersonDTO addPerson(PersonDTO pDTO, String street, String additionalInfo) {
         EntityManager em = getEntityManager();
         
         Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName());
@@ -171,20 +172,43 @@ public class PersonFacade implements IPersonFacade{
     }
 
     @Override
-    public PersonDTO editPerson(PersonDTO p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PersonDTO editPerson(PersonDTO p) throws NotFoundException {
+        EntityManager em = getEntityManager();
+        Person person = em.find(Person.class, p.getId());
+        if (person == null) {
+                throw new NotFoundException(String.format("No person with provided id found", p.getId()));
+        } else {
+            
+                person.setFirstName(p.getFirstName());
+                person.setLastName(p.getLastName());
+                person.setEmail(p.getEmail());
+                person.setNumbers(p.getNumbers());
+                person.setAddress(p.getAddress());
+                person.setHobbies(p.getHobbies());
+        try {
+            em.getTransaction().begin();
+                    em.merge(person);
+
+            em.getTransaction().commit();
+            return new PersonDTO(person);
+        
+        } finally {  
+          em.close();
+        }
+    }
+    
+    
     }
     //implement exception
     @Override
-    public PersonDTO deletePerson(long id) {
+    public PersonDTO deletePerson(long id) throws NotFoundException {
         EntityManager em = getEntityManager();
         
         
         Person person = em.find(Person.class, id);
         Address address = person.getAddress();
         if (person == null) {
-            return null;
-            //throw new PersonNotFoundException(String.format("Person with id: (%d) not found", id));
+            throw new NotFoundException(String.format("Person with id: (%d) not found", id));
         } else {
         try {
             em.getTransaction().begin();
@@ -202,33 +226,133 @@ public class PersonFacade implements IPersonFacade{
     }
 
     @Override
-    public HobbyDTO deleteHobby(String hobby) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public HobbyDTO deleteHobby(String hobbyName) {
+        EntityManager em = getEntityManager();
+        
+        Hobby hobby = em.find(Hobby.class, hobbyName);
+        
+        try {
+            em.getTransaction().begin();
+            em.remove(hobby);
+            
+            em.getTransaction().commit();
+            
+        } finally {
+            em.close();
+        }
+        return new HobbyDTO(hobby);
     }
 
     @Override
     public PhoneDTO deletePhone(int number) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = getEntityManager();
+        
+        Phone phone = em.find(Phone.class, number);
+        
+        try {
+            em.getTransaction().begin();
+            em.remove(phone);
+            
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new PhoneDTO(phone);
     }
 
     @Override
-    public PhoneDTO addPhone(PhoneDTO pDTO, PersonDTO p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PhoneDTO addPhone(PhoneDTO phonedto, Person p) {
+        EntityManager em = getEntityManager();
+        
+        
+        Phone phone = new Phone(phonedto.getNumber(), phonedto.getDescription(), p);
+        try {
+            em.getTransaction().begin();
+            Query q = em.createQuery("SELECT p FROM Person p WHERE p.id= :id");
+                q.setParameter("id", p.getId());
+                
+                
+                Person person = (Person)q.getSingleResult();
+                if (person.getNumbers().contains(phone)){
+                    //throw exception that the number already exists for this person
+                } else {
+                    p.setNumber(phone);
+                }
+                em.persist(p);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new PhoneDTO(phone);
     }
 
     @Override
-    public PhoneDTO editPhone(PhoneDTO p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PhoneDTO editPhone(PhoneDTO p) throws NotFoundException {
+        EntityManager em = getEntityManager();
+        Phone phone = em.find(Phone.class, p.getId());
+        
+        if (phone == null) {
+                throw new NotFoundException(String.format("No phone with provided id found", p.getId()));
+        } else {
+                phone.setDescription(p.getDescription());
+                phone.setNumber(p.getNumber());
+                
+        try {
+            em.getTransaction().begin();
+                    em.merge(phone);
+
+            em.getTransaction().commit();
+            return new PhoneDTO(phone);
+        
+        } finally {  
+          em.close();
+        }
+    }
+    
+    
+    }
+    
+
+    @Override
+    public HobbyDTO addHobby(HobbyDTO hDTO) {
+        EntityManager em = getEntityManager();
+        Hobby hobby = new Hobby(hDTO.getName(), hDTO.getDescription());
+        try {
+            em.getTransaction().begin();
+            em.persist(hobby);
+            
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new HobbyDTO(hobby);
     }
 
     @Override
-    public HobbyDTO addHobby(HobbyDTO hDTO, List<PersonDTO> p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public HobbyDTO editHobby(HobbyDTO hDTO) throws NotFoundException {
+        EntityManager em = getEntityManager();
+        Hobby hobby = em.find(Hobby.class, hDTO.getId());
+        
+        if (hobby == null) {
+                throw new NotFoundException(String.format("No hobby with provided id found", hDTO.getId()));
+                
+        } else {
+                
+                hobby.setName(hDTO.getName());
+                hobby.setDescription(hDTO.getDescription());
+                
+        try {
+            em.getTransaction().begin();
+                    em.merge(hobby);
 
-    @Override
-    public HobbyDTO editHobby(HobbyDTO hDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            em.getTransaction().commit();
+            return new HobbyDTO(hobby);
+        
+        } finally {  
+          em.close();
+        }
+    }
+       
     }
 
     

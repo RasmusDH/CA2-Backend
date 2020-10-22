@@ -1,6 +1,7 @@
 
 package DTO;
 
+import entities.Address;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -25,6 +26,11 @@ public class PersonDTO {
     private List<Hobby> hobbies;
     //private String name;
     //private String hobbyDescription;
+    
+    private Address address;
+    //private String Street;
+    //private String AdditionalInfo;
+    //private CityInfo cityInfo;
 
     public PersonDTO() {}
     
@@ -37,6 +43,8 @@ public class PersonDTO {
         this.numbers = p.getNumbers();
         
         this.hobbies = p.getHobbies();
+        
+        this.address = p.getAddress();
         
     }
 
@@ -79,6 +87,12 @@ public class PersonDTO {
     public void setNumbers(List<Phone> numbers) {
         this.numbers = numbers;
     }
+    
+    public void setNumber(Phone number) {
+        if (number != null){
+            numbers.add(number);
+        }
+    }
 
     public List<Hobby> getHobbies() {
         return hobbies;
@@ -87,6 +101,22 @@ public class PersonDTO {
     public void setHobbies(List<Hobby> hobbies) {
         this.hobbies = hobbies;
     }
+    
+    public void setHobby(Hobby hobby) {
+        if (hobby != null){
+            hobbies.add(hobby);
+        }
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+    
+    
 
     @Override
     public int hashCode() {

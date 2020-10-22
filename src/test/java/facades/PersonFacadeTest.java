@@ -151,6 +151,59 @@ public class PersonFacadeTest {
         int result = pFac.getPersoncountByHobby(h2);
         assertEquals(expResult, result);
     }
+    
+    @Test
+    public void testAddPerson() {
+        System.out.println("Tester addPerson Person, Street, AdditionalInfo");
+    }
+    
+    @Test
+    public void testDeletePerson() {
+        System.out.println("Tester deletePerson Person");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        int expResult = 1;
+        pFac.deletePerson(p1.getId());
+        int result = pFac.getAllPersons().getAll().size();
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testEditPerson() {
+        
+    }
+    
+    @Test
+    public void testAddPhone() {
+        
+    }
+    
+    @Test
+    public void testDeletePhone() {
+        
+    }
+    
+    @Test
+    public void testEditPhone() {
+        
+    }
+    
+    @Test
+    public void testAddHobby() {
+        
+    }
+    
+    @Test
+    public void testDeleteHobby() {
+        
+    }
+    
+    @Test
+    public void testEditHobby() {
+        
+    }
 
     
     

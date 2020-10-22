@@ -84,6 +84,10 @@ public class Person implements Serializable {
     public List<Hobby> getHobbies() {
         return hobbies;
     }
+    
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
+    }
 
     public void setHobby(Hobby hobby) {
         if (hobby != null){
@@ -94,7 +98,11 @@ public class Person implements Serializable {
     public List<Phone> getNumbers() {
         return numbers;
     }
-
+    
+    public void setNumbers(List<Phone> numbers) {
+        this.numbers = numbers;
+    }
+    
     public void setNumber(Phone number) {
         if (number != null){
             numbers.add(number);
