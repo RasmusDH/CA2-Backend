@@ -67,7 +67,7 @@ public class AddressFacade {
             em.getTransaction().commit();
             return address;
         } catch (Exception ex) {
-            throw new AlreadyExistsException("This address exists in the database.");
+            throw new AlreadyExistsException("This address already exists in the database.");
         } finally {
             em.close();
         }
@@ -91,7 +91,7 @@ public class AddressFacade {
         }
     }
     
-    public List<PersonDTO> getAllPersonsWithZip(int zipCode) throws NotFoundException {
+    public List<PersonDTO> getAllPersonsWithZip(String zipCode) throws NotFoundException {
         EntityManager em = emf.createEntityManager();
         try {
             List<Person> persons = em.createQuery("SELECT p FROM Person p "
