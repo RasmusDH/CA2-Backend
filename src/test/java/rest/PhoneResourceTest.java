@@ -87,13 +87,13 @@ public class PhoneResourceTest {
         
         try {
             em.getTransaction().begin();
-            /*
+            
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
                 em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
             
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
                 em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
-                */
+                
                 em.persist(p1);
                 em.persist(p2); 
             em.getTransaction().commit();
