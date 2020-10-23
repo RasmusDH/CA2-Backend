@@ -1,5 +1,6 @@
 package facades;
 
+import DTO.HobbyDTO;
 import DTO.PersonDTO;
 import DTO.PersonsDTO;
 import entities.Hobby;
@@ -68,8 +69,11 @@ public class PersonFacadeTest {
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+                em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
             em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();   
+                em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+                em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
                 
                 em.persist(p1);
                 em.persist(p2);
@@ -114,7 +118,7 @@ public class PersonFacadeTest {
     
     
     @Test
-    public void testGetPersonByPhone() {
+    public void testGetPersonByNumber() {
         System.out.println("Tester get person by phone");
         
         EntityManagerFactory _emf = null;
@@ -134,7 +138,7 @@ public class PersonFacadeTest {
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
         int expResult = 2;
-        int result = pFac.getAllPersons(h2).getAll().size();
+        int result = pFac.getAllPersons(h2.getName()).getAll().size();
         
         assertEquals(expResult, result);
     }
@@ -148,27 +152,33 @@ public class PersonFacadeTest {
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
         int expResult = 2;
-        int result = pFac.getPersoncountByHobby(h2);
+        int result = pFac.getPersoncountByHobby(h2.getName());
         assertEquals(expResult, result);
     }
     
     @Test
     public void testAddPerson() {
         System.out.println("Tester addPerson Person, Street, AdditionalInfo");
-    }
-    
-    @Test
-    public void testDeletePerson() {
-        System.out.println("Tester deletePerson Person");
         
         EntityManagerFactory _emf = null;
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
-        int expResult = 1;
-        pFac.deletePerson(p1.getId());
-        int result = pFac.getAllPersons().getAll().size();
-        assertEquals(expResult, result);
+        
+        
     }
+    /*
+    @Test
+    public void testDeletePerson() {
+        System.out.println("Tester deletePerson Id");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        PersonDTO expResult = new PersonDTO(p2);
+        PersonDTO result = pFac.deletePerson(p2.getId());
+        
+        assertEquals(expResult, result);
+    }*/
     
     @Test
     public void testEditPerson() {
@@ -192,6 +202,15 @@ public class PersonFacadeTest {
     
     @Test
     public void testAddHobby() {
+        System.out.println("Testing addHobby Hobby");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        HobbyDTO h1DTO = new HobbyDTO(h1);
+        HobbyDTO expResult = new HobbyDTO(h1);
+        HobbyDTO result = pFac.addHobby(h1DTO);
+        
+        assertEquals(expResult, result);
         
     }
     

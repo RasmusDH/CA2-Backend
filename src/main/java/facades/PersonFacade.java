@@ -17,6 +17,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -73,10 +74,14 @@ public class PersonFacade implements IPersonFacade{
     }
     
     @Override
-    public PersonsDTO getAllPersons(Hobby hobby) {
+    public PersonsDTO getAllPersons(String hobbyName) {
         EntityManager em = getEntityManager();
         
         try{
+            Query q = em.createQuery(
+                        "SELECT h FROM Hobby h where h.name= :name");
+                q.setParameter("name", hobbyName);
+                Hobby hobby = (Hobby)q.getSingleResult();
             List<Long> personIDList = listOfPersonIDs(hobby, em);
             List<Person> personList = new ArrayList(); 
             personListByIDList(personIDList, em, personList);
@@ -109,10 +114,10 @@ public class PersonFacade implements IPersonFacade{
         }
     
     @Override
-    public int getPersoncountByHobby(Hobby hobby) {
+    public int getPersoncountByHobby(String hobbyName) {
         EntityManager em = emf.createEntityManager();
         try{
-            return getAllPersons(hobby).getAll().size();
+            return getAllPersons(hobbyName).getAll().size();
         }finally{  
             em.close();
         }
@@ -123,15 +128,16 @@ public class PersonFacade implements IPersonFacade{
         EntityManager em = emf.createEntityManager();
         
         try{
-            
             Query q1 = em.createQuery("SELECT ph.person.id FROM Phone ph WHERE ph.number= :number");
                 q1.setParameter("number", number);
             long personID = (long)q1.getSingleResult();
             
             Query q2 = em.createQuery("SELECT p FROM Person p where p.id= :id");
                 q2.setParameter("id", personID);
-            
-            return new PersonDTO((Person)q2.getSingleResult());
+                
+                Person p = (Person)q2.getSingleResult();
+                System.out.println("Person from facade: " + p.getFirstName());
+            return new PersonDTO(p);
         }finally{  
             em.close();
         }
@@ -145,24 +151,22 @@ public class PersonFacade implements IPersonFacade{
     
     
     @Override
-    public PersonDTO addPerson(PersonDTO pDTO, String street, String additionalInfo) {
+    public PersonDTO addPerson(PersonDTO pDTO, String street) {
         EntityManager em = getEntityManager();
         
         Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName());
+        Address address = null;
         try {
             em.getTransaction().begin();
-            Query q = em.createQuery("SELECT a FROM Address a WHERE a.street= :street AND a.additionalInfo= :additionalInfo");
-                q.setParameter("street", street);
-                q.setParameter("additionalInfo", additionalInfo);
+            
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE"
+                    + " a.street = :address", Address.class)
+                    .setParameter("address", street);
+            
+            address = query.getSingleResult();
                 
-                // Laver en liste med alle adresser:
-                List<Address> addresses = q.getResultList();
-                // Hvis addressen allerede findes i db:
-                if (addresses.size() > 0){
-                    person.setAddress(addresses.get(0));
-                } else {
-                    person.setAddress(new Address(street, additionalInfo));
-                }
+                person.setAddress(address);
+                
                 em.persist(person);
             em.getTransaction().commit();
         } finally {
@@ -172,12 +176,10 @@ public class PersonFacade implements IPersonFacade{
     }
 
     @Override
-    public PersonDTO editPerson(PersonDTO p) throws NotFoundException {
+    public PersonDTO editPerson(PersonDTO p) {
         EntityManager em = getEntityManager();
         Person person = em.find(Person.class, p.getId());
-        if (person == null) {
-                throw new NotFoundException(String.format("No person with provided id found", p.getId()));
-        } else {
+        
             
                 person.setFirstName(p.getFirstName());
                 person.setLastName(p.getLastName());
@@ -195,21 +197,19 @@ public class PersonFacade implements IPersonFacade{
         } finally {  
           em.close();
         }
-    }
+    
     
     
     }
     //implement exception
     @Override
-    public PersonDTO deletePerson(long id) throws NotFoundException {
+    public PersonDTO deletePerson(long id) {
         EntityManager em = getEntityManager();
         
         
         Person person = em.find(Person.class, id);
         Address address = person.getAddress();
-        if (person == null) {
-            throw new NotFoundException(String.format("Person with id: (%d) not found", id));
-        } else {
+        
         try {
             em.getTransaction().begin();
                 em.remove(person);
@@ -222,7 +222,7 @@ public class PersonFacade implements IPersonFacade{
                 em.close();
             }
             return new PersonDTO(person);
-        }
+        
     }
 
     @Override
@@ -287,13 +287,11 @@ public class PersonFacade implements IPersonFacade{
     }
 
     @Override
-    public PhoneDTO editPhone(PhoneDTO p) throws NotFoundException {
+    public PhoneDTO editPhone(PhoneDTO p) {
         EntityManager em = getEntityManager();
         Phone phone = em.find(Phone.class, p.getId());
         
-        if (phone == null) {
-                throw new NotFoundException(String.format("No phone with provided id found", p.getId()));
-        } else {
+        
                 phone.setDescription(p.getDescription());
                 phone.setNumber(p.getNumber());
                 
@@ -307,7 +305,7 @@ public class PersonFacade implements IPersonFacade{
         } finally {  
           em.close();
         }
-    }
+    
     
     
     }
@@ -329,15 +327,10 @@ public class PersonFacade implements IPersonFacade{
     }
 
     @Override
-    public HobbyDTO editHobby(HobbyDTO hDTO) throws NotFoundException {
+    public HobbyDTO editHobby(HobbyDTO hDTO) {
         EntityManager em = getEntityManager();
         Hobby hobby = em.find(Hobby.class, hDTO.getId());
         
-        if (hobby == null) {
-                throw new NotFoundException(String.format("No hobby with provided id found", hDTO.getId()));
-                
-        } else {
-                
                 hobby.setName(hDTO.getName());
                 hobby.setDescription(hDTO.getDescription());
                 
@@ -351,7 +344,7 @@ public class PersonFacade implements IPersonFacade{
         } finally {  
           em.close();
         }
-    }
+    
        
     }
 

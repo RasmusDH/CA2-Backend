@@ -15,6 +15,7 @@ public class PhoneDTO {
     private int number;
     private String description;
 
+
     public PhoneDTO() {
     }
 
@@ -22,6 +23,7 @@ public class PhoneDTO {
         this.id = p.getId();
         this.number = p.getNumber();
         this.description = p.getDescription();
+
     }
 
     public Long getId() {
@@ -71,6 +73,7 @@ public class PhoneDTO {
         }
         return true;
     }
+
     
     
     

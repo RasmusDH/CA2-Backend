@@ -1,6 +1,7 @@
 package facades;
 
 import DTO.AddressDTO;
+import DTO.PersonDTO;
 import entities.Address;
 import entities.CityInfo;
 import entities.Person;
@@ -30,6 +31,7 @@ public class AddressFacadeTest {
 
     private static EntityManagerFactory emf;
     private static AddressFacade facade;
+    private static PersonFacade FACADE;
     private EntityManager em;
 //    private static EntityManager sem;
     
@@ -45,6 +47,7 @@ public class AddressFacadeTest {
     public static void setUpClass() {
        emf = EMF_Creator.createEntityManagerFactoryForTest();
        facade = AddressFacade.getFacadeExample(emf);
+       FACADE = PersonFacade.getFacadeExample(emf);
 //       sem = emf.createEntityManager();
 //       
 //       try {
@@ -72,6 +75,7 @@ public class AddressFacadeTest {
         em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
@@ -182,4 +186,16 @@ public class AddressFacadeTest {
             assertThat(ex.getMessage(), is("This address already exists in the database."));
         }
     }
+    
+    @Test
+    public void testAddPerson() {
+        PersonDTO pDTO = new PersonDTO(p1);
+        pDTO.setFirstName("Hello");
+        String street = "Testgade";
+        String result = FACADE.addPerson(pDTO, street).getFirstName();
+        String expResult = "Hello";
+        assertEquals(result, expResult);
+    }
+    
+    
 }
