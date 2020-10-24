@@ -3,6 +3,7 @@ package facades;
 import DTO.HobbyDTO;
 import DTO.PersonDTO;
 import DTO.PersonsDTO;
+import DTO.PhoneDTO;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
@@ -192,5 +193,91 @@ public class PersonFacadeTest {
         
         
     }
+    /*
+    @Test
+    public void testDeletePerson() {
+        System.out.println("Tester deletePerson Person");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        PersonDTO pDTO = new PersonDTO(p1);
+        
+        long id = pDTO.getId();
+        int expResult = 1;
+        pFac.deletePerson(p1.getId());
+        PersonsDTO result = pFac.getAllPersons();
+        
+        assertEquals(result, expResult);
+    }*/
+    
+    @Test
+    public void testAddHobby() {
+        System.out.println("Tester addHobby Hobby");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        HobbyDTO hDTO = new HobbyDTO(h1);
+        hDTO.setName("Drawing");
+        
+        
+        
+        String result = pFac.addHobby(hDTO).getName();
+        String expResult = "Drawing";
+        
+        assertEquals(result, expResult);
+    }
+    
+    @Test
+    public void testDeleteHobby() {
+        System.out.println("Tester deleteHobby String");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        String name = "Dance";
+        String result = pFac.deleteHobby(name).getDescription();
+        String expResult = "Hiphop dance";
+        
+        assertEquals(result, expResult);
+        
+    }
+    
+    @Test
+    public void testEditHobby() {
+        System.out.println("Tester editHobby Hobby");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        HobbyDTO hDTO = new HobbyDTO(h1);
+        hDTO.setName("Drawing");
+        hDTO.setDescription("Traditional");
+        
+        String result = pFac.editHobby(hDTO).getDescription();
+        String expResult = "Traditional";
+        
+        assertEquals(result, expResult);
+        
+    }
+    
+    @Test
+    public void testAddPhone() {
+        System.out.println("Tester addPhone Phone");
+        
+        EntityManagerFactory _emf = null;
+        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
+        
+        Phone ph4 = new Phone(88888888, "Kajs arbejdsmobil", p2);
+        PhoneDTO phDTO = new PhoneDTO(ph4);
+        
+        String result = pFac.addPhone(phDTO, p2).getDescription();
+        String expResult = "Kajs arbejdsmobil";
+        
+        assertEquals(result, expResult);
+    }
+    
+    
     
 }

@@ -3,6 +3,7 @@ package rest;
 
 import DTO.PersonDTO;
 import DTO.PersonsDTO;
+import DTO.PhoneDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import facades.PersonFacade;
@@ -45,6 +46,34 @@ public class PhoneResource {
         PersonDTO personDTO = FACADE.getPersonByNumber(number);
         
         return GSON.toJson(personDTO);
+    }
+    /*
+    @Path("/add")
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public String addPhone(PhoneDTO phone, Person p) {
+        PhoneDTO pDTO = FACADE.addPhone(phone, p);
+        return GSON.toJson(pDTO);
+        
+    }*/
+    
+    @PUT
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String editPhone(@PathParam("id") String phone) {
+        PhoneDTO phDTO = GSON.fromJson(phone, PhoneDTO.class);
+        PhoneDTO phNew = FACADE.editPhone(phDTO);
+        return GSON.toJson(phNew);
+    }
+    
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String deletePhone(@PathParam("id") int number) {
+        PhoneDTO phDeleted = FACADE.deletePhone(number);
+        return GSON.toJson(phDeleted);
     }
 
 }

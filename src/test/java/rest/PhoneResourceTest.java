@@ -1,13 +1,14 @@
 package rest;
 
 import DTO.PersonDTO;
+import DTO.PhoneDTO;
 import entities.Hobby;
 import entities.Person;
 import entities.Phone;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
-import io.restassured.http.ContentType;
+import static io.restassured.RestAssured.with;
 import io.restassured.parsing.Parser;
 import java.net.URI;
 import java.util.List;
@@ -134,7 +135,30 @@ public class PhoneResourceTest {
             .and()
             .body("lastName", is("Hummel"));
     }
-    
+    //Not working
+    /*
+    @Test
+    public void testAddPhone() {
+        System.out.println("Testing addPhone Phone");
+        
+        Phone tempPh = new Phone(88888888, "lones telefon", p2);
+        
+        PhoneDTO result
+                = with()
+                .body(tempPh)
+                .and()
+                .body(p2)
+                .contentType("application/json")
+                .when().request("POST", "/phone/add").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .extract()
+                .as(PhoneDTO.class);
+        
+         assertThat((result.getNumber()), equalTo(88888888));
+    }*/
+   
+        
 }
 
 

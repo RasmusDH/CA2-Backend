@@ -154,7 +154,7 @@ public class PersonFacade implements IPersonFacade{
     public PersonDTO addPerson(PersonDTO pDTO) {
         EntityManager em = getEntityManager();
         
-        Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName());
+        Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName(), pDTO.getNumbers(), pDTO.getHobbies(), pDTO.getAddress());
         try {
             em.getTransaction().begin();
                 em.persist(person);
@@ -192,7 +192,7 @@ public class PersonFacade implements IPersonFacade{
     
     
     }
-    //implement exception
+    
     @Override
     public PersonDTO deletePerson(long id) {
         EntityManager em = getEntityManager();
@@ -220,7 +220,7 @@ public class PersonFacade implements IPersonFacade{
     public HobbyDTO deleteHobby(String hobbyName) {
         EntityManager em = getEntityManager();
         
-        Query q = em.createQuery("SELECT h FROM Hobby h where h.name :name");
+        Query q = em.createQuery("SELECT h FROM Hobby h where h.name= :name");
                 q.setParameter("name", hobbyName);
                 
                 Hobby tempH = (Hobby)q.getSingleResult();
@@ -240,17 +240,20 @@ public class PersonFacade implements IPersonFacade{
     public PhoneDTO deletePhone(int number) {
         EntityManager em = getEntityManager();
         
-        Phone phone = em.find(Phone.class, number);
+        Query q = em.createQuery("SELECT ph FROM Phone ph where ph.number= :number");
+                q.setParameter("number", number);
+                
+                Phone tempPh = (Phone)q.getSingleResult();
         
         try {
             em.getTransaction().begin();
-            em.remove(phone);
+            em.remove(tempPh);
             
             em.getTransaction().commit();
         } finally {
             em.close();
         }
-        return new PhoneDTO(phone);
+        return new PhoneDTO(tempPh);
     }
 
     @Override
@@ -282,18 +285,21 @@ public class PersonFacade implements IPersonFacade{
     @Override
     public PhoneDTO editPhone(PhoneDTO p) {
         EntityManager em = getEntityManager();
-        Phone phone = em.find(Phone.class, p.getId());
+        int number = p.getNumber();
+        Query q = em.createQuery("SELECT ph FROM Phone ph where ph.number= :number");
+                q.setParameter("number", number);
+                
+                Phone tempPh = (Phone)q.getSingleResult();
         
-        
-                phone.setDescription(p.getDescription());
-                phone.setNumber(p.getNumber());
+                tempPh.setDescription(p.getDescription());
+                
                 
         try {
             em.getTransaction().begin();
-                    em.merge(phone);
+                    em.merge(tempPh);
 
             em.getTransaction().commit();
-            return new PhoneDTO(phone);
+            return new PhoneDTO(tempPh);
         
         } finally {  
           em.close();

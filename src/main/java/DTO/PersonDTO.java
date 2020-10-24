@@ -47,6 +47,15 @@ public class PersonDTO {
         this.address = p.getAddress();
         
     }
+    public PersonDTO(String email, String fName, String lName, List<Phone> numbers, List<Hobby> hobby, Address address) {
+        this.email = email;
+        this.firstName = fName;
+        this.lastName = lName;
+        this.address = address;
+        this.hobbies = hobby;
+        this.numbers = numbers;
+    }
+
     public PersonDTO(String email, String fName, String lName) {
         this.email = email;
         this.firstName = fName;

@@ -109,35 +109,11 @@ public class PersonResource {
         return GSON.toJson(pDeleted);
     }
     /*
-    @Path("/phone/add")
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public String addPhone(PhoneDTO phone) {
-        PhoneDTO pDTO = FACADE.addPhone(phone, p);
-        return GSON.toJson(pDTO);
-        
-        
-    }
     
-    @PUT
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public String editPerson(@PathParam("id") long id,  String person) {
-        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
-        pDTO.setId(id);
-        PersonDTO pNew = FACADE.editPerson(pDTO);
-        return GSON.toJson(pNew);
-    }
     
-    @DELETE
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public String deletePerson(@PathParam("id") int id) {
-        PersonDTO pDeleted = FACADE.deletePerson(id);
-        return GSON.toJson(pDeleted);
-    }
+    
+    
+    
     
     @Path("/add")
     @POST
