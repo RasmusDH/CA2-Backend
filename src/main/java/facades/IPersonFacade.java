@@ -26,7 +26,7 @@ public interface IPersonFacade {
   public PersonsDTO getAllPersons(String hobby); 
   
   
-  public PersonDTO addPerson(PersonDTO pDTO, String street);
+  public PersonDTO addPerson(PersonDTO pDTO);
   public PersonDTO editPerson(PersonDTO p);  
   public PersonDTO deletePerson(long id);
   public PhoneDTO addPhone(PhoneDTO pDTO, Person p);

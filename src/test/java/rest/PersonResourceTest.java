@@ -8,6 +8,7 @@ import entities.Phone;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.with;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import java.net.URI;
@@ -32,7 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
-//@Disabled
+@Disabled
 public class PersonResourceTest {
     
 
@@ -89,9 +90,11 @@ public class PersonResourceTest {
         
         try {
             em.getTransaction().begin();
+            
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
                 em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
-            
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
+                em.createNativeQuery("alter table HOBBY AUTO_INCREMENT = 1").executeUpdate();
             em.createNamedQuery("Person.deleteAllRows").executeUpdate();
                 em.createNativeQuery("alter table PERSON AUTO_INCREMENT = 1").executeUpdate();
                 
@@ -196,6 +199,23 @@ public class PersonResourceTest {
             assertThat(personsDTOs, containsInAnyOrder(p1DTO, p2DTO, p3DTO));
     }
     */
+    
+    @Test
+    public void testAddPerson() {
+        PersonDTO tempP = new PersonDTO("live", "testFName", "testLName");
+        
+        PersonDTO result
+                = with()
+                .body(tempP)
+                .contentType("application/json")
+                .when().request("POST", "/person/add").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .extract()
+                .as(PersonDTO.class);
+        
+        assertThat((result.getEmail()), equalTo("live"));
+    }
     
 }
 

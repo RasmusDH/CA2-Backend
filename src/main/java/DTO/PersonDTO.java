@@ -47,6 +47,11 @@ public class PersonDTO {
         this.address = p.getAddress();
         
     }
+    public PersonDTO(String email, String fName, String lName) {
+        this.email = email;
+        this.firstName = fName;
+        this.lastName = lName;
+    }
 
     public long getId() {
         return id;

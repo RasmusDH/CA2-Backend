@@ -151,28 +151,19 @@ public class PersonFacade implements IPersonFacade{
     
     
     @Override
-    public PersonDTO addPerson(PersonDTO pDTO, String street) {
+    public PersonDTO addPerson(PersonDTO pDTO) {
         EntityManager em = getEntityManager();
         
         Person person = new Person(pDTO.getEmail(), pDTO.getFirstName(), pDTO.getLastName());
-        Address address = null;
         try {
             em.getTransaction().begin();
-            
-            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a WHERE"
-                    + " a.street = :address", Address.class)
-                    .setParameter("address", street);
-            
-            address = query.getSingleResult();
-                
-                person.setAddress(address);
-                
                 em.persist(person);
             em.getTransaction().commit();
+            return pDTO;
         } finally {
             em.close();
         }
-        return new PersonDTO(person);
+        
     }
 
     @Override
@@ -229,18 +220,20 @@ public class PersonFacade implements IPersonFacade{
     public HobbyDTO deleteHobby(String hobbyName) {
         EntityManager em = getEntityManager();
         
-        Hobby hobby = em.find(Hobby.class, hobbyName);
-        
+        Query q = em.createQuery("SELECT h FROM Hobby h where h.name :name");
+                q.setParameter("name", hobbyName);
+                
+                Hobby tempH = (Hobby)q.getSingleResult();
         try {
             em.getTransaction().begin();
-            em.remove(hobby);
+            em.remove(tempH);
             
             em.getTransaction().commit();
             
         } finally {
             em.close();
         }
-        return new HobbyDTO(hobby);
+        return new HobbyDTO(tempH);
     }
 
     @Override

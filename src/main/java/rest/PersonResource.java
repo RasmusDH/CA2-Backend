@@ -3,6 +3,7 @@ package rest;
 
 import DTO.PersonDTO;
 import DTO.PersonsDTO;
+import DTO.PhoneDTO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import entities.Hobby;
@@ -78,14 +79,45 @@ public class PersonResource {
     }
     
     
-    @Path("add")
+    @Path("/add")
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response addPerson(String person, String street, String additionalInfo) {
-        PersonDTO p = GSON.fromJson(person, PersonDTO.class);
-        PersonDTO pAdded = FACADE.addPerson(p, street);
-        return Response.ok(pAdded).build();
+    public String addPerson(PersonDTO person) {
+        PersonDTO p = FACADE.addPerson(person);
+        return GSON.toJson(p);
+        
+        
+    }
+    
+    @PUT
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String editPerson(@PathParam("id") long id,  String person) {
+        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
+        pDTO.setId(id);
+        PersonDTO pNew = FACADE.editPerson(pDTO);
+        return GSON.toJson(pNew);
+    }
+    
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String deletePerson(@PathParam("id") int id) {
+        PersonDTO pDeleted = FACADE.deletePerson(id);
+        return GSON.toJson(pDeleted);
+    }
+    /*
+    @Path("/phone/add")
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public String addPhone(PhoneDTO phone) {
+        PhoneDTO pDTO = FACADE.addPhone(phone, p);
+        return GSON.toJson(pDTO);
+        
+        
     }
     
     @PUT
@@ -107,5 +139,35 @@ public class PersonResource {
         return GSON.toJson(pDeleted);
     }
     
+    @Path("/add")
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public String addPerson(PersonDTO person) {
+        PersonDTO p = FACADE.addPerson(person);
+        return GSON.toJson(p);
+        
+        
+    }
+    
+    @PUT
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String editPerson(@PathParam("id") long id,  String person) {
+        PersonDTO pDTO = GSON.fromJson(person, PersonDTO.class);
+        pDTO.setId(id);
+        PersonDTO pNew = FACADE.editPerson(pDTO);
+        return GSON.toJson(pNew);
+    }
+    
+    @DELETE
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String deletePerson(@PathParam("id") int id) {
+        PersonDTO pDeleted = FACADE.deletePerson(id);
+        return GSON.toJson(pDeleted);
+    }
+    */
 }
 

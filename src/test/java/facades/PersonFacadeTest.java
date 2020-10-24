@@ -158,73 +158,39 @@ public class PersonFacadeTest {
     
     @Test
     public void testAddPerson() {
-        System.out.println("Tester addPerson Person, Street, AdditionalInfo");
+        System.out.println("Tester addPerson Person");
         
         EntityManagerFactory _emf = null;
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
         
+        PersonDTO pDTO = new PersonDTO(p1);
+        pDTO.setFirstName("Test");
         
+        String result = pFac.addPerson(pDTO).getFirstName();
+        String expResult = "Test";
+        
+        assertEquals(result, expResult);
         
     }
-    /*
-    @Test
-    public void testDeletePerson() {
-        System.out.println("Tester deletePerson Id");
-        
-        EntityManagerFactory _emf = null;
-        PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
-        
-        PersonDTO expResult = new PersonDTO(p2);
-        PersonDTO result = pFac.deletePerson(p2.getId());
-        
-        assertEquals(expResult, result);
-    }*/
     
     @Test
     public void testEditPerson() {
-        
-    }
-    
-    @Test
-    public void testAddPhone() {
-        
-    }
-    
-    @Test
-    public void testDeletePhone() {
-        
-    }
-    
-    @Test
-    public void testEditPhone() {
-        
-    }
-    
-    @Test
-    public void testAddHobby() {
-        System.out.println("Testing addHobby Hobby");
+        System.out.println("Tester editPerson Person");
         
         EntityManagerFactory _emf = null;
         PersonFacade pFac = PersonFacade.getFacadeExample(_emf);
-        HobbyDTO h1DTO = new HobbyDTO(h1);
-        HobbyDTO expResult = new HobbyDTO(h1);
-        HobbyDTO result = pFac.addHobby(h1DTO);
         
-        assertEquals(expResult, result);
+        PersonDTO pDTO = new PersonDTO(p1);
+        pDTO.setFirstName("Test");
+        pDTO.setEmail("LiveTest");
         
-    }
-    
-    @Test
-    public void testDeleteHobby() {
+        String result = pFac.editPerson(pDTO).getEmail();
+        String expResult = "LiveTest";
         
-    }
-    
-    @Test
-    public void testEditHobby() {
+        assertEquals(result, expResult);
+        
+        
         
     }
-
-    
-    
     
 }

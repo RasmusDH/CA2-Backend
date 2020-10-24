@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 //Uncomment the line below, to temporarily disable this test
-//@Disabled
+@Disabled
 public class AddressFacadeTest {
 
     private static EntityManagerFactory emf;
@@ -187,15 +187,7 @@ public class AddressFacadeTest {
         }
     }
     
-    @Test
-    public void testAddPerson() {
-        PersonDTO pDTO = new PersonDTO(p1);
-        pDTO.setFirstName("Hello");
-        String street = "Testgade";
-        String result = FACADE.addPerson(pDTO, street).getFirstName();
-        String expResult = "Hello";
-        assertEquals(result, expResult);
-    }
+    
     
     
 }
